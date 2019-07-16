@@ -76,7 +76,7 @@ var getGlobalWebSocket = function () {
 var isWebSocket = function (w) { return typeof w === 'function' && w.CLOSING === 2; };
 var DEFAULT = {
     maxReconnectionDelay: 10000,
-    minReconnectionDelay: 1000 + Math.random() * 4000,
+    minReconnectionDelay: 1000,
     minUptime: 5000,
     reconnectionDelayGrowFactor: 1.3,
     connectionTimeout: 4000,
@@ -391,7 +391,7 @@ var ReconnectingWebSocket = /** @class */ (function () {
     };
     ReconnectingWebSocket.prototype._getNextDelay = function () {
         var _a = this._options, _b = _a.reconnectionDelayGrowFactor, reconnectionDelayGrowFactor = _b === void 0 ? DEFAULT.reconnectionDelayGrowFactor : _b, _c = _a.minReconnectionDelay, minReconnectionDelay = _c === void 0 ? DEFAULT.minReconnectionDelay : _c, _d = _a.maxReconnectionDelay, maxReconnectionDelay = _d === void 0 ? DEFAULT.maxReconnectionDelay : _d;
-        var delay = minReconnectionDelay;
+        var delay = 0;
         if (this._retryCount > 0) {
             delay =
                 minReconnectionDelay * Math.pow(reconnectionDelayGrowFactor, this._retryCount - 1);
@@ -445,6 +445,7 @@ var ReconnectingWebSocket = /** @class */ (function () {
             .then(function (url) {
             // close could be called before creating the ws
             if (_this._closeCalled) {
+                _this._connectLock = false;
                 return;
             }
             _this._debug('connect', { url: url, protocols: _this._protocols });
