@@ -41,7 +41,7 @@ export type Options = {
 
 const DEFAULT = {
     maxReconnectionDelay: 10000,
-    minReconnectionDelay: 1000 + Math.random() * 4000,
+    minReconnectionDelay: 1000,
     minUptime: 5000,
     reconnectionDelayGrowFactor: 1.3,
     connectionTimeout: 4000,
