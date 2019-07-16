@@ -306,7 +306,22 @@ export default class ReconnectingWebSocket {
 
     private _wait(): Promise<void> {
         return new Promise(resolve => {
-            setTimeout(resolve, this._getNextDelay());
+            function _online(e: Event) {
+                if (e.type === 'online') {
+                    if (timerId) clearTimeout(timerId);
+                    resolve();
+                }
+                window.removeEventListener('online', _online);
+            }
+
+            let timerId = setTimeout(() => {
+                window.removeEventListener('online', _online);
+                resolve();
+            }, this._getNextDelay());
+
+            // If the browser has come back online we immediately retry
+            // connecting.
+            window.addEventListener('online', _online);
         });
     }
 

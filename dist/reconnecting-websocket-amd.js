@@ -395,8 +395,7 @@ define(function () { 'use strict';
             var _a = this._options, _b = _a.reconnectionDelayGrowFactor, reconnectionDelayGrowFactor = _b === void 0 ? DEFAULT.reconnectionDelayGrowFactor : _b, _c = _a.minReconnectionDelay, minReconnectionDelay = _c === void 0 ? DEFAULT.minReconnectionDelay : _c, _d = _a.maxReconnectionDelay, maxReconnectionDelay = _d === void 0 ? DEFAULT.maxReconnectionDelay : _d;
             var delay = 0;
             if (this._retryCount > 0) {
-                delay =
-                    minReconnectionDelay * Math.pow(reconnectionDelayGrowFactor, this._retryCount - 1);
+                delay = minReconnectionDelay * Math.pow(reconnectionDelayGrowFactor, this._retryCount - 1);
                 if (delay > maxReconnectionDelay) {
                     delay = maxReconnectionDelay;
                 }
@@ -407,7 +406,21 @@ define(function () { 'use strict';
         ReconnectingWebSocket.prototype._wait = function () {
             var _this = this;
             return new Promise(function (resolve) {
-                setTimeout(resolve, _this._getNextDelay());
+                function _online(e) {
+                    if (e.type === "online") {
+                        if (timerId)
+                            clearTimeout(timerId);
+                        resolve();
+                    }
+                    window.removeEventListener("online", _online);
+                }
+                var timerId = setTimeout(function () {
+                    window.removeEventListener("online", _online);
+                    resolve();
+                }, _this._getNextDelay());
+                // If the browser has come back online we immediately retry
+                // connecting.
+                window.addEventListener("online", _online);
             });
         };
         ReconnectingWebSocket.prototype._getNextUrl = function (urlProvider) {
