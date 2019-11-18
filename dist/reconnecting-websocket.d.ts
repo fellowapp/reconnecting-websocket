@@ -4,10 +4,8 @@
  * https://github.com/pladaria/reconnecting-websocket
  * License MIT
  */
-import { CloseEvent, ErrorEvent, Event, WebSocketEventListenerMap } from './events';
-export declare type Event = Event;
-export declare type ErrorEvent = ErrorEvent;
-export declare type CloseEvent = CloseEvent;
+export { CloseEvent, ErrorEvent, Event } from './events';
+import { WebSocketEventListenerMap } from './events';
 export declare type Options = {
     WebSocket?: any;
     maxReconnectionDelay?: number;
