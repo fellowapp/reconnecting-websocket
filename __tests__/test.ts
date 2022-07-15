@@ -10,10 +10,36 @@ const URL = `ws://localhost:${PORT}`;
 
 beforeEach(() => {
     (global as any).WebSocket = WebSocket;
+    const addEventListener = jest.fn(function addEventListener<K extends keyof WindowEventMap>(
+        _type: K,
+        _listener: (this: Window, ev: WindowEventMap[K]) => any,
+        _options?: boolean | AddEventListenerOptions,
+    ) {
+        return true;
+    });
+    const removeEventListener = jest.fn(function removeEventListener<
+        K extends keyof WindowEventMap
+    >(
+        _type: K,
+        _listener: (this: Window, ev: WindowEventMap[K]) => any,
+        _options?: boolean | EventListenerOptions,
+    ) {
+        return true;
+    });
+
+    Object.defineProperty(global, 'window', {
+        configurable: true,
+        writable: true,
+        value: {
+            addEventListener,
+            removeEventListener,
+        },
+    });
 });
 
 afterEach(() => {
     delete (global as any).WebSocket;
+    Object.defineProperty(global, 'window', {value: undefined});
     jest.restoreAllMocks();
 });
 
