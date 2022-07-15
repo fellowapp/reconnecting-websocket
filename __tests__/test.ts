@@ -11,18 +11,22 @@ const URL = `ws://localhost:${PORT}`;
 beforeEach(() => {
     (global as any).WebSocket = WebSocket;
     const addEventListener = jest.fn(function addEventListener<K extends keyof WindowEventMap>(
+        /* eslint-disable @typescript-eslint/no-unused-vars */
         _type: K,
         _listener: (this: Window, ev: WindowEventMap[K]) => any,
         _options?: boolean | AddEventListenerOptions,
+        /* eslint-enable @typescript-eslint/no-unused-vars */
     ) {
         return true;
     });
     const removeEventListener = jest.fn(function removeEventListener<
         K extends keyof WindowEventMap
     >(
+        /* eslint-disable @typescript-eslint/no-unused-vars */
         _type: K,
         _listener: (this: Window, ev: WindowEventMap[K]) => any,
         _options?: boolean | EventListenerOptions,
+        /* eslint-enable @typescript-eslint/no-unused-vars */
     ) {
         return true;
     });

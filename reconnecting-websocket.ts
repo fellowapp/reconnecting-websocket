@@ -326,6 +326,8 @@ export default class ReconnectingWebSocket {
 
     private _wait(): Promise<void> {
         return new Promise(resolve => {
+            let timerId: NodeJS.Timeout | undefined = undefined;
+
             function _online(e: Event) {
                 if (e.type === 'online') {
                     if (timerId) clearTimeout(timerId);
@@ -334,7 +336,7 @@ export default class ReconnectingWebSocket {
                 window.removeEventListener('online', _online);
             }
 
-            let timerId = setTimeout(() => {
+            timerId = setTimeout(() => {
                 window.removeEventListener('online', _online);
                 resolve();
             }, this._getNextDelay());
