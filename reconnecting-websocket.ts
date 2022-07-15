@@ -191,6 +191,31 @@ export default class ReconnectingWebSocket {
     }
 
     /**
+     * Returns JSON serializable object that can be used for debugging a disconnected websocket
+     */
+    public dumpDebugState() {
+        return {
+            url: this.url,
+            readyState: this.readyState,
+            rawReadyState: this._ws ? this._ws.readyState : 'no _ws available',
+            protocol: this.protocol,
+            extensions: this.extensions,
+            bufferedAmount: this.bufferedAmount,
+            retryCount: this.retryCount,
+            binaryType: this.binaryType,
+
+            wsPresent: !!this._ws,
+
+            _shouldReconnect: this._shouldReconnect,
+            _connectLock: this._connectLock,
+            _binaryType: this._binaryType,
+            _closeCalled: this._closeCalled,
+            _messageQueueLength: this._messageQueue.length,
+            _options: this._options,
+        };
+    }
+
+    /**
      * An event listener to be called when the WebSocket connection's readyState changes to CLOSED
      */
     public onclose: ((event: Events.CloseEvent) => void) | null = null;
